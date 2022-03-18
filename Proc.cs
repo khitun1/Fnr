@@ -82,16 +82,12 @@ namespace Fnr
         private Files_result Find(string file_path)
         {
             var result_item = new Files_result();
-            using (StreamReader sr = new StreamReader(file_path, true))
+            var text = File.ReadAllText(file_path);
+            if (text.Contains(Find_block))
             {
-                var code = sr.CurrentEncoding.ToString();
-                var text = File.ReadAllText(file_path, Encoding.GetEncoding(code));
-                if (text.Contains(Find_block))
-                {
-                    result_item.File_path = text;
-                    result_item.Success = true;
-                    result_item.Conformity = new Regex(Find_block).Matches(text).Count;
-                }
+                result_item.File_path = file_path;
+                result_item.Success = true;
+                result_item.Conformity = new Regex(Find_block).Matches(text).Count;
             }
 
             return result_item;
